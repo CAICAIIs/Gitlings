@@ -1,0 +1,4 @@
+[exercise]
+name = "Amending Commits"
+difficulty = 2
+requires_commit_history = true

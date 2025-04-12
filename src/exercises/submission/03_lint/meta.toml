@@ -1,0 +1,4 @@
+[exercise]
+name = "Commit Linting"
+difficulty = 3
+requires_commit_hook = true

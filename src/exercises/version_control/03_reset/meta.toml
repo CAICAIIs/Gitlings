@@ -1,0 +1,4 @@
+[exercise]
+name = "Resetting Changes"
+difficulty = 3
+requires_commit_history = true

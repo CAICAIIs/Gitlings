@@ -1,0 +1,9 @@
+tests/
+test/
+build/
+__pycache__/
+.*
+.*/
+!.gitignore
+tmp*
+dist/
