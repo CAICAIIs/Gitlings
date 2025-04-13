@@ -1,0 +1,12 @@
+[exercise]
+id = "basic_commit"
+name = "首次提交"
+difficulty = 1
+dependencies = ["basic_init"]
+
+[verification]
+checks = [
+    "file_exists:README.md @ 检查README文件",
+    "commit_count:1 @ 检查提交次数",
+    "commit_message:feat: @ 检查提交信息规范"
+]

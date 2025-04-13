@@ -1,54 +1,51 @@
 from dataclasses import dataclass
 from pathlib import Path
 import toml
-from typing import List, Optional
+from typing import List, Dict
 
 @dataclass
 class Exercise:
-    path: Path
+    id: str
     name: str
     description: str
+    difficulty: int
+    hints: List[str]
+    checks: List[Dict[str, str]]
     
     @classmethod
     def load(cls, path: Path):
-        """Load exercise from directory"""
-        try:
-            meta = toml.load(path / "meta.toml")
-            with open(path / "exercise.md") as f:
-                description = f.read()
-            
-            if "exercise" not in meta or "name" not in meta["exercise"]:
-                raise ValueError("Invalid meta.toml structure")
-                
-            return cls(path, meta["exercise"]["name"], description)
-        except Exception as e:
-            print(f"Error loading exercise at {path}: {e}")
-            return None
+        """从上一级目录加载练习"""
+        meta = toml.load(path / "meta.toml")
+        with open(path / "exercise.md") as f:
+            desc = f.read()
+        with open(path / "hint.md") as f:
+            hints = [h.strip() for h in f.read().split("---") if h.strip()]
+        
+        return cls(
+            meta["exercise"]["id"],
+            meta["exercise"]["name"],
+            desc,
+            meta["exercise"]["difficulty"],
+            hints,
+            meta["verification"]["checks"]
+        )
 
-class ExerciseManager:
-    def __init__(self, exercises_root: Path):
-        self.exercises_root = exercises_root
-        self.current_index = 0
-        self.exercises = self._load_exercises()
     
-    def _load_exercises(self) -> List[Exercise]:
-        """Load all exercises from the exercises directory"""
-        exercises = []
+    def load_exercise(exercise_path: str) -> dict:
+        """加载练习数据"""
+        base_path = Path(__file__).parent.parent.parent / "exercises"
+        full_path = base_path / exercise_path
         
-        # 递归查找所有包含meta.toml的目录
-        for meta_file in self.exercises_root.rglob("meta.toml"):
-            exercise_dir = meta_file.parent
-            if exercise_dir.is_dir():
-                exercise = Exercise.load(exercise_dir)
-                if exercise:
-                    exercises.append(exercise)
+        meta = toml.load(full_path / "meta.toml")
+        with open(full_path / "exercise.md") as f:
+            description = f.read()
+        with open(full_path / "hint.md") as f:
+            hints = f.read().split("---")
         
-        # 按路径排序保证顺序
-        exercises.sort(key=lambda x: str(x.path))
-        return exercises
-    
-    @property
-    def current_exercise(self) -> Optional[Exercise]:
-        if self.current_index < len(self.exercises):
-            return self.exercises[self.current_index]
-        return None
+        return {
+            'id': exercise_path,
+            'name': meta['exercise']['name'],
+            'description': description,
+            'hints': hints,
+            'difficulty': meta['exercise'].get('difficulty', 1)
+        }

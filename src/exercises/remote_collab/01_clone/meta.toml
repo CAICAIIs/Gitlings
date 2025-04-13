@@ -1,4 +1,0 @@
-[exercise]
-name = "Cloning Repositories"
-difficulty = 1
-requires_remote = "https://github.com/gitlings/example.git"

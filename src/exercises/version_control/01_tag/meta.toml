@@ -1,4 +1,0 @@
-[exercise]
-name = "Tagging Versions"
-difficulty = 2
-requires_commit_history = true

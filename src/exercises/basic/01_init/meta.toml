@@ -1,3 +1,11 @@
 [exercise]
-name = "Initialize Repository"
+id = "basic_init"
+name = "初始化仓库"
 difficulty = 1
+
+[verification]
+checks = [
+    "git init @ 检查是否已初始化仓库",
+    "config user.name @ 检查用户配置",
+    "config user.email @ 检查邮箱配置"
+]
